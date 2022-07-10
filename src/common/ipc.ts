@@ -3,7 +3,7 @@
  * @note 戻り値はvoid型にすること.
  */
 export type IpcMainToRender = {
-  sample: (text: string, count: number) => void;
+  updateEmulators: (emulators: string[]) => void;
 };
 export type IpcMainToRenderKey = keyof IpcMainToRender;
 

@@ -68,7 +68,22 @@ const createWindow = async () => {
 
   MainMessenger.init(mainWindow);
 
-  mainWindow.loadURL(resolveHtmlPath('index.html'));
+  mainWindow
+    .loadURL(resolveHtmlPath('index.html'))
+    .then(() => {
+      exec('emulator -list-avds', (error, stdout, stderr) => {
+        if (error === null) {
+          const avds = stdout.split(os.EOL).filter(v => v !== '');
+          if (avds.length > 0) {
+            MainMessenger.send('updateEmulators', avds);
+          }
+        } else {
+          console.log(error);
+          console.log(stderr);
+        }
+      });
+    })
+    .catch(() => {});
 
   mainWindow.on('ready-to-show', () => {
     if (!mainWindow) {
@@ -119,16 +134,6 @@ app
       // On macOS it's common to re-create a window in the app when the
       // dock icon is clicked and there are no other windows open.
       if (mainWindow === null) createWindow();
-    });
-
-    exec('emulator -list-avds', (error, stdout, stderr) => {
-      if (error === null) {
-        const avds = stdout.split(os.EOL);
-        console.log(avds);
-      } else {
-        console.log(error);
-        console.log(stderr);
-      }
     });
   })
   .catch(console.log);

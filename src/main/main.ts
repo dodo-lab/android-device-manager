@@ -12,7 +12,6 @@ import {app, BrowserWindow, shell} from 'electron';
 import path from 'path';
 import {loadConfig, saveConfig} from './config';
 import {MainMessenger} from './mainMessenger';
-import MenuBuilder from './menu';
 import {resolveHtmlPath} from './utils/resolveHtmlPath';
 
 let mainWindow: BrowserWindow | null = null;
@@ -57,8 +56,8 @@ const createWindow = async () => {
   const windowRect = loadConfig('windowRect', {x: 0, y: 0, width: 1024, height: 1024});
 
   mainWindow = new BrowserWindow({
-    show: false,
     ...windowRect,
+    autoHideMenuBar: true,
     icon: getAssetPath('icon.png'),
     webPreferences: {
       preload: app.isPackaged ? path.join(__dirname, 'preload.js') : path.join(__dirname, '../../.erb/dll/preload.js'),
@@ -90,9 +89,6 @@ const createWindow = async () => {
   mainWindow.on('closed', () => {
     mainWindow = null;
   });
-
-  const menuBuilder = new MenuBuilder(mainWindow);
-  menuBuilder.buildMenu();
 
   // Open urls in the user's browser
   mainWindow.webContents.setWindowOpenHandler(edata => {

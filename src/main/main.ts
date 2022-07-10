@@ -8,7 +8,9 @@
  * When running `npm run build` or `npm run build:main`, this file is compiled to
  * `./src/main.js` using webpack. This gives us some performance wins.
  */
+import {exec} from 'child_process';
 import {app, BrowserWindow, shell} from 'electron';
+import os from 'os';
 import path from 'path';
 import {loadConfig, saveConfig} from './config';
 import {MainMessenger} from './mainMessenger';
@@ -117,6 +119,16 @@ app
       // On macOS it's common to re-create a window in the app when the
       // dock icon is clicked and there are no other windows open.
       if (mainWindow === null) createWindow();
+    });
+
+    exec('emulator -list-avds', (error, stdout, stderr) => {
+      if (error === null) {
+        const avds = stdout.split(os.EOL);
+        console.log(avds);
+      } else {
+        console.log(error);
+        console.log(stderr);
+      }
     });
   })
   .catch(console.log);

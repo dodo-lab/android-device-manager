@@ -5,12 +5,7 @@
     ".eslintignore": "ignore"
   },
 
-  "eslint.validate": [
-    "javascript",
-    "javascriptreact",
-    "html",
-    "typescriptreact"
-  ],
+  "eslint.validate": ["javascript", "javascriptreact", "html", "typescriptreact"],
 
   "javascript.validate.enable": false,
   "javascript.format.enable": false,
@@ -29,5 +24,6 @@
     "test/**/__snapshots__": true,
     "package-lock.json": true,
     "*.{css,sass,scss}.d.ts": true
-  }
+  },
+  "cSpell.words": ["zustand"]
 }

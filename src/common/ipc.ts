@@ -1,3 +1,5 @@
+import {BootType} from './types';
+
 /**
  * メインプロセスからレンダープロセスへの通信.
  * @note 戻り値はvoid型にすること.
@@ -12,7 +14,7 @@ export type IpcMainToRenderKey = keyof IpcMainToRender;
  * @note 戻り値はvoid型にすること.
  */
 export type IpcRenderToMain = {
-  sample: (count: number, text: string) => void;
+  bootEmulator: (emulator: string, bootType: BootType) => void;
 };
 export type IpcRenderToMainKey = keyof IpcRenderToMain;
 

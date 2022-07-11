@@ -8,13 +8,20 @@
  * When running `npm run build` or `npm run build:main`, this file is compiled to
  * `./src/main.js` using webpack. This gives us some performance wins.
  */
-import {exec} from 'child_process';
+import {exec, spawn} from 'child_process';
+import {BootType} from 'common/types';
 import {app, BrowserWindow, shell} from 'electron';
 import os from 'os';
 import path from 'path';
 import {loadConfig, saveConfig} from './config';
 import {MainMessenger} from './mainMessenger';
 import {resolveHtmlPath} from './utils/resolveHtmlPath';
+
+const bootArgs: Record<BootType, string> = {
+  boot: '',
+  cold_boot: '-no-snapshot-load',
+  wipe_data_boot: '-wipe-data',
+};
 
 let mainWindow: BrowserWindow | null = null;
 
@@ -134,6 +141,10 @@ app
       // On macOS it's common to re-create a window in the app when the
       // dock icon is clicked and there are no other windows open.
       if (mainWindow === null) createWindow();
+    });
+
+    MainMessenger.on('bootEmulator', ([emulator, bootType]) => {
+      spawn('emulator', ['-avd', emulator, bootArgs[bootType]]);
     });
   })
   .catch(console.log);
